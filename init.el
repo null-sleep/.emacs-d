@@ -9,6 +9,9 @@
 ;; Adjust garbage collection thresholds
 (setq gc-cons-threshold 100000000)
 
+;; Setup customization file
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+
 ;; Minimal UI
 (scroll-bar-mode -1)
 (tool-bar-mode   -1)
@@ -29,23 +32,19 @@
   (package-install 'use-package))
 (eval-when-compile
   (require 'use-package))
-
+(require 'benchmark-init)
 (use-package benchmark-init
   :ensure t
   :config
   ;; To disable collection of benchmark data after init is done.
   (add-hook 'after-init-hook 'benchmark-init/deactivate))
-  
+(use-package auto-package-update
+   :ensure t
+   :config
+   (setq auto-package-update-delete-old-versions t
+         auto-package-update-interval 4)
+   (auto-package-update-maybe))
+
 (require 'init-utils)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (benchmark-init use-package))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+(require 'init-exec-path) ;; Set up $PATH
+
