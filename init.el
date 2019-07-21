@@ -6,17 +6,19 @@
 
 (defconst *is-a-mac* (eq system-type 'darwin))
 
-;; Adjust garbage collection thresholds
-(setq gc-cons-threshold 100000000)
+(setq gc-cons-threshold (expt 2 24)) ; 16 MiB
+;; (setq load-prefer-newer t) ;; Avoid outdated byte-compiled elisp files
 
-;; Setup customization file
+;; Keep emacs Custom-settings in separate file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(load custom-file)
 
 ;; Minimal UI
 (scroll-bar-mode -1)
 (tool-bar-mode   -1)
 (tooltip-mode    -1)
 (menu-bar-mode   -1)
+(setq inhibit-startup-screen t)
 
 ;; Setup package installation suite
 (require 'package)
@@ -45,6 +47,9 @@
          auto-package-update-interval 4)
    (auto-package-update-maybe))
 
-(require 'init-utils)
-(require 'init-exec-path) ;; Set up $PATH
+;; (require-package 'diminish)
 
+(load-theme 'wombat) ;; Temporary
+(require 'editor)
+
+(benchmark-init/show-durations-tree)
